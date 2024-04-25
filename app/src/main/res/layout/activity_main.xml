@@ -1,3 +1,32 @@
+<!DOCTYPE RelativeLayout [
+        <!ELEMENT RelativeLayout (RelativeLayout|TextView|Button)*>
+        <!ATTLIST RelativeLayout
+                android:id CDATA #REQUIRED
+                android:layout_below CDATA #IMPLIED
+                android:layout_centerHorizontal CDATA #IMPLIED
+                android:layout_height CDATA #REQUIRED
+                android:layout_marginTop CDATA #IMPLIED
+                android:layout_width CDATA #REQUIRED
+                xmlns:android CDATA #IMPLIED
+                xmlns:tools CDATA #IMPLIED>
+        <!ELEMENT TextView (#PCDATA)>
+        <!ATTLIST TextView
+                android:id CDATA #REQUIRED
+                android:layout_height CDATA #REQUIRED
+                android:layout_toRightOf CDATA #IMPLIED
+                android:layout_width CDATA #REQUIRED
+                android:text CDATA #IMPLIED
+                android:textSize CDATA #REQUIRED
+                android:textStyle CDATA #IMPLIED>
+        <!ELEMENT Button (#PCDATA)>
+        <!ATTLIST Button
+                android:id CDATA #REQUIRED
+                android:layout_height CDATA #REQUIRED
+                android:layout_toRightOf CDATA #IMPLIED
+                android:layout_width CDATA #REQUIRED
+                android:onClick CDATA #REQUIRED
+                android:text CDATA #REQUIRED>
+        ]>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
