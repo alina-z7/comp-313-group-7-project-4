@@ -8,6 +8,8 @@ package edu.luc.etl.cs313.android.simplestopwatch.common;
  * @author laufer
  */
 public interface StopwatchModelListener {
+    void playDefaultNotification();
+
     void onTimeUpdate(int timeValue);
     void onStateUpdate(int stateId);
 }

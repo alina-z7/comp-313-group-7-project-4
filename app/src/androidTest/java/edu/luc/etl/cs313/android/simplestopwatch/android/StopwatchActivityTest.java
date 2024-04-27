@@ -1,33 +1,124 @@
 package edu.luc.etl.cs313.android.simplestopwatch.android;
 
-import androidx.test.filters.SmallTest;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import android.app.Activity;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+import android.widget.TextView;
+import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 
-import org.junit.Rule;
-import org.junit.runner.RunWith;
 
-import edu.luc.etl.cs313.android.simplestopwatch.test.android.AbstractStopwatchActivityTest;
+import java.io.IOException;
+import java.util.Locale;
+
+import edu.luc.etl.cs313.android.simplestopwatch.R;
+import edu.luc.etl.cs313.android.simplestopwatch.common.Constants;
+import edu.luc.etl.cs313.android.simplestopwatch.common.StopwatchModelListener;
+import edu.luc.etl.cs313.android.simplestopwatch.model.ConcreteStopwatchModelFacade;
+import edu.luc.etl.cs313.android.simplestopwatch.model.StopwatchModelFacade;
 
 /**
- * Concrete Android test subclass. Has to inherit from framework class
- * and uses delegation to concrete subclass of abstract test superclass.
- * IMPORTANT: project must export JUnit 4 to make it available on the
- * device.
+ * A thin adapter component for the stopwatch.
  *
  * @author laufer
- * @see "https://developer.android.com/training/testing/ui-testing/"
  */
-@RunWith(AndroidJUnit4.class)
-@SmallTest
-public class StopwatchActivityTest extends AbstractStopwatchActivityTest {
+public class StopwatchAdapter extends Activity implements StopwatchModelListener {
 
-    @Rule
-    public final ActivityTestRule<StopwatchAdapter> activityRule =
-            new ActivityTestRule<>(StopwatchAdapter.class);
+    private static String TAG = "stopwatch-android-activity";
+
+    /**
+     * The state-based dynamic model.
+     */
+    private StopwatchModelFacade model;
+
+    protected void setModel(final StopwatchModelFacade model) {
+        this.model = model;
+    }
 
     @Override
-    protected StopwatchAdapter getActivity() {
-        return activityRule.getActivity();
+    public void playDefaultNotification() {
+        final Uri defaultRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        final MediaPlayer mediaPlayer = new MediaPlayer();
+        final Context context = getApplicationContext();
+
+        try {
+            mediaPlayer.setDataSource(context, defaultRingtoneUri);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+            mediaPlayer.prepare();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mp.release();
+                }
+            });
+            mediaPlayer.start();
+        } catch (final IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // inject dependency on view so this adapter receives UI events
+        setContentView(R.layout.activity_main);
+        // inject dependency on model into this so model receives UI events
+        this.setModel(new ConcreteStopwatchModelFacade());
+        // inject dependency on this into model to register for UI updates
+        model.setModelListener(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        model.start();
+    }
+
+    // TODO remaining lifecycle methods
+
+    /**
+     * Updates the seconds and minutes in the UI.
+     * @param time
+     */
+    public void onTimeUpdate(final int time) {
+        // UI adapter responsibility to schedule incoming events on UI thread
+        runOnUiThread(() -> {
+            final TextView tvS = findViewById(R.id.seconds);
+            final TextView tvM = findViewById(R.id.minutes);
+            final var locale = Locale.getDefault();
+            tvS.setText(String.format(locale,"%02d", time % Constants.SEC_PER_MIN));
+            tvM.setText(String.format(locale,"%02d", time / Constants.SEC_PER_MIN));
+        });
+    }
+
+    /**
+     * Updates the state name in the UI.
+     * @param stateId
+     */
+    public void onStateUpdate(final int stateId) {
+        // UI adapter responsibility to schedule incoming events on UI thread
+        runOnUiThread(() -> {
+            final TextView stateName = findViewById(R.id.stateName);
+            stateName.setText(getString(stateId));
+        });
+    }
+
+    // forward event listener methods to the model
+    public void onStartStop(final View view) {
+        model.onStartStop();
+    }
+
+    public void onLapReset(final View view)  {
+        model.onLapReset();
     }
 }
