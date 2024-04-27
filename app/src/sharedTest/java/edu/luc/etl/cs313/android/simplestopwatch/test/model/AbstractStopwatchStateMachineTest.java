@@ -95,7 +95,7 @@ public abstract class AbstractStopwatchStateMachineTest {
         assertFalse(dependency.isStarted());
         // directly invoke the button press event handler methods
         model.onStartStop();
-        assertEquals(R.string.RUNNING, dependency.getState());
+        assertEquals(R.string.DECREMENTING, dependency.getState());
         assertTrue(dependency.isStarted());
         onTickRepeat(5);
         assertTimeEquals(5);

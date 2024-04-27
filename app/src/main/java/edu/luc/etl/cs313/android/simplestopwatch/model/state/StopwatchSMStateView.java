@@ -9,7 +9,7 @@ package edu.luc.etl.cs313.android.simplestopwatch.model.state;
 interface StopwatchSMStateView {
 
     // transitions
-    void toRunningState();
+    void toDecrementState();
     void toStoppedState();
     void toIncrementState();
     void toAlarmState();
@@ -27,7 +27,7 @@ interface StopwatchSMStateView {
     void updateUIRuntime();
 
 
-    // state-dependent UI updates
+
     int getRuntime();
 }
 

@@ -2,6 +2,8 @@ package edu.luc.etl.cs313.android.simplestopwatch.model.state;
 
 import edu.luc.etl.cs313.android.simplestopwatch.R;
 
+// When the button is clicked, it transitions to the increment state
+
 class StoppedState implements StopwatchState {
 
     public StoppedState(final StopwatchSMStateView sm) {
@@ -23,7 +25,7 @@ class StoppedState implements StopwatchState {
         } else if (sm.getRuntime() > 0) {
             // If runtime is greater than 0, start the timer and transition to RunningState.
             sm.actionStart();
-            sm.toRunningState();
+            sm.toDecrementState();
         }
     }
 

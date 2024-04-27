@@ -24,10 +24,14 @@ public class StopwatchAdapter extends Activity implements StopwatchModelListener
 
     private static String TAG = "stopwatch-android-activity";
 
+
     /**
      * The state-based dynamic model.
      */
     private StopwatchModelFacade model;
+
+    // Getter for the application context.
+
 
     protected void setModel(final StopwatchModelFacade model) {
         this.model = model;
@@ -42,6 +46,8 @@ public class StopwatchAdapter extends Activity implements StopwatchModelListener
         this.setModel(new ConcreteStopwatchModelFacade());
         // inject dependency on this into model to register for UI updates
         model.setModelListener(this);
+        //sends the context of the app to alarmingstate
+        StopwatchAdapter.context = getApplicationContext();
     }
 
     @Override
@@ -67,7 +73,8 @@ public class StopwatchAdapter extends Activity implements StopwatchModelListener
         runOnUiThread(() -> {
             final TextView tvS = findViewById(R.id.seconds);
             final var locale = Locale.getDefault();
-            tvS.setText(String.format(locale,"%02d", time % Constants.SEC_PER_MIN));;
+            //SEC_PER_MIN
+            tvS.setText(String.format(locale,"%02d", time % 100));;
         });
     }
 
@@ -83,9 +90,15 @@ public class StopwatchAdapter extends Activity implements StopwatchModelListener
         });
     }
 
+
     // forward event listener methods to the model
     public void onStartStop(final View view) {
         model.onStartStop();
     }
 
+    private static Context context;
+    public static Context getAppContext() {
+        return StopwatchAdapter.context;
+    }
 }
+

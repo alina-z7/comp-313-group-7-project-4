@@ -2,6 +2,9 @@ package edu.luc.etl.cs313.android.simplestopwatch.model.state;
 
 import edu.luc.etl.cs313.android.simplestopwatch.R;
 
+// Original Lap-Running State
+// It increments when the button is clicked
+// If the counter is more than 3 seconds, transition to the decrementing state
 class IncrementState implements StopwatchState {
 
     // Counter to keep track of ticks.
@@ -19,8 +22,8 @@ class IncrementState implements StopwatchState {
         counter = 0;
 
         // If runtime is greater than or equal to 99 and not 0, transition to RunningState.
-        if (sm.getRuntime() >= 60 && sm.getRuntime() != 0) {
-            sm.toRunningState();
+        if (sm.getRuntime() >= 99 && sm.getRuntime() != 0) {
+            sm.toDecrementState();
         } else {
             // Otherwise, increment the action and transition to IncrementState.
             sm.actionInc();
@@ -37,7 +40,7 @@ class IncrementState implements StopwatchState {
         // If the counter reaches 3, trigger an alarm and transition to RunningState.
         if (counter == 3) {
             // Assuming AlarmingState has a static method alarm().
-            sm.toRunningState();
+            sm.toDecrementState();
         } else {
             // Otherwise, transition to IncrementState again.
             sm.toIncrementState();

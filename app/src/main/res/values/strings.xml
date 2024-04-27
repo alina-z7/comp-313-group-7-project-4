@@ -14,10 +14,7 @@
 
     <!-- model state display names -->
     <string name="STOPPED">Stopped</string>
-    <string name="RUNNING">Running</string>
-    <string name="INCREMENTING">Incrementing</string>
     <string name="DECREMENTING">Decrementing</string>
+    <string name="INCREMENTING">Incrementing</string>
     <string name="ALARMING">Alarming</string>
-
-
 </resources>
