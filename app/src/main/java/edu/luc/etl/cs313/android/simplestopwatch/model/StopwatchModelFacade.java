@@ -1,6 +1,5 @@
 package edu.luc.etl.cs313.android.simplestopwatch.model;
 
-import edu.luc.etl.cs313.android.simplestopwatch.common.Startable;
 import edu.luc.etl.cs313.android.simplestopwatch.common.StopwatchModelSource;
 import edu.luc.etl.cs313.android.simplestopwatch.common.StopwatchUIListener;
 
@@ -10,4 +9,8 @@ import edu.luc.etl.cs313.android.simplestopwatch.common.StopwatchUIListener;
  *
  * @author laufer
  */
-public interface StopwatchModelFacade extends Startable, StopwatchUIListener, StopwatchModelSource { }
+public interface StopwatchModelFacade extends StopwatchUIListener, StopwatchModelSource {
+    void start();
+
+    void onStart();
+}

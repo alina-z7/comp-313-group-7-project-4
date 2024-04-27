@@ -1,5 +1,6 @@
 package edu.luc.etl.cs313.android.simplestopwatch.model.state;
 
+import edu.luc.etl.cs313.android.simplestopwatch.common.StopwatchModelListener;
 import edu.luc.etl.cs313.android.simplestopwatch.common.StopwatchModelSource;
 import edu.luc.etl.cs313.android.simplestopwatch.common.StopwatchUIListener;
 import edu.luc.etl.cs313.android.simplestopwatch.model.clock.TickListener;
@@ -10,4 +11,6 @@ import edu.luc.etl.cs313.android.simplestopwatch.model.clock.TickListener;
  *
  * @author laufer
  */
-public interface StopwatchStateMachine extends StopwatchUIListener, TickListener, StopwatchModelSource, StopwatchSMStateView { }
+public interface StopwatchStateMachine extends StopwatchUIListener, TickListener, StopwatchModelSource, StopwatchSMStateView {
+    void setUIUpdateListener(StopwatchModelListener uiUpdateListener);
+}

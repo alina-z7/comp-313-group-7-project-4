@@ -1,11 +1,18 @@
 package edu.luc.etl.cs313.android.simplestopwatch.android;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 
+
+import java.io.IOException;
 import java.util.Locale;
 
 import edu.luc.etl.cs313.android.simplestopwatch.R;
@@ -30,6 +37,28 @@ public class StopwatchAdapter extends Activity implements StopwatchModelListener
 
     protected void setModel(final StopwatchModelFacade model) {
         this.model = model;
+    }
+
+    @Override
+    public void playDefaultNotification() {
+        final Uri defaultRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        final MediaPlayer mediaPlayer = new MediaPlayer();
+        final Context context = getApplicationContext();
+
+        try {
+            mediaPlayer.setDataSource(context, defaultRingtoneUri);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+            mediaPlayer.prepare();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mp.release();
+                }
+            });
+            mediaPlayer.start();
+        } catch (final IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -89,7 +118,4 @@ public class StopwatchAdapter extends Activity implements StopwatchModelListener
         model.onStartStop();
     }
 
-    public void onLapReset(final View view)  {
-        model.onLapReset();
-    }
 }
