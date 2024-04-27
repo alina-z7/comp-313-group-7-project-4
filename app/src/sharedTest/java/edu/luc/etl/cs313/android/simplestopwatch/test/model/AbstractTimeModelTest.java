@@ -78,7 +78,7 @@ public abstract class AbstractTimeModelTest {
         }
         assertEquals(rt + 5, model.getRuntime());
         assertEquals(lt, model.getLaptime());
-        model.setLaptime();
+        model.decRuntime();
         assertEquals(rt + 5, model.getLaptime());
         for (var i = 0; i < 5; i ++) {
             model.incRuntime();

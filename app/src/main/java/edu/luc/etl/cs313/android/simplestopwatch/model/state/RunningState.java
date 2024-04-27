@@ -14,18 +14,20 @@ class RunningState implements StopwatchState {
     public void onStartStop() {
         sm.actionStop();
         sm.toStoppedState();
+        if (sm.getRuntime() > 0) {
+            sm.actionReset(); // Reset the timer if runtime is greater than 0.
+        }
     }
 
-    @Override
-    public void onLapReset() {
-        sm.actionLap();
-        sm.toLapRunningState();
-    }
 
     @Override
     public void onTick() {
-        sm.actionInc();
-        sm.toRunningState();
+        if (sm.getRuntime() == 0) {
+            sm.toAlarmState(); // Transition to AlarmState if runtime is 0.
+        } else {
+            sm.actionDec(); // Decrement the timer value.
+            sm.actionUpdateView(); // Update the view with the new runtime value.
+        }
     }
 
     @Override

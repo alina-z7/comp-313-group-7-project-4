@@ -100,12 +100,12 @@ public abstract class AbstractStopwatchStateMachineTest {
         onTickRepeat(5);
         assertTimeEquals(5);
         model.onLapReset();
-        assertEquals(R.string.LAP_RUNNING, dependency.getState());
+        assertEquals(R.string.INCREMENTING, dependency.getState());
         assertTrue(dependency.isStarted());
         onTickRepeat(4);
         assertTimeEquals(5);
         model.onStartStop();
-        assertEquals(R.string.LAP_STOPPED, dependency.getState());
+        assertEquals(R.string.ALARMING, dependency.getState());
         assertFalse(dependency.isStarted());
         assertTimeEquals(5);
         model.onLapReset();
@@ -205,7 +205,7 @@ class UnifiedMockDependency implements TimeModel, ClockModel, StopwatchModelList
     }
 
     @Override
-    public void setLaptime() {
+    public void decRuntime() {
         lapTime = runningTime;
     }
 

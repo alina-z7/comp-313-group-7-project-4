@@ -10,23 +10,31 @@ class StoppedState implements StopwatchState {
 
     private final StopwatchSMStateView sm;
 
+    // Transition the Stop State to the IncrementState
+    //
     @Override
     public void onStartStop() {
-        sm.actionStart();
-        sm.toRunningState();
+        if (sm.getRuntime() == 0) {
+            // If runtime is 0, reset the timer, start it, increment the action, and transition to IncrementState.
+            sm.actionReset();
+            sm.actionStart();
+            sm.actionInc();
+            sm.toIncrementState();
+        } else if (sm.getRuntime() > 0) {
+            // If runtime is greater than 0, start the timer and transition to RunningState.
+            sm.actionStart();
+            sm.toRunningState();
+        }
     }
 
-    @Override
-    public void onLapReset() {
-        sm.actionReset();
-        sm.toStoppedState();
-    }
+
 
     @Override
     public void onTick() {
         throw new UnsupportedOperationException("onTick");
     }
 
+    // Update the view with the current runtime instead of the laptime.
     @Override
     public void updateView() {
         sm.updateUIRuntime();
